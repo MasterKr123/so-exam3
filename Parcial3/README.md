@@ -110,17 +110,9 @@ E inicio el agente en modo servidor:
 $ consul agent -server -bootstrap-expect=1 \
     -data-dir=/etc/consul/data -node=agent-server -bind=192.168.64.131 \
     -enable-script-checks=true -config-dir=/etc/consul.d -client 0.0.0.0
-
-Luego creo un archivo de configuración para el microservicio con un healthcheck:
-# su consul
-$ echo '{"service": {"name": "microservicio", "tags": ["flask"], "port": 8080,
-  "check": {"script": "curl localhost:8080/health >/dev/null 2>&1", "interval": "10s"}}}' >/etc/consul.d/microservicio.json
-
-E inicio el agente en modo cliente:
-$ consul agent -data-dir=/etc/consul/data -node=agent-one \
-    -bind=192.168.62.131 -enable-script-checks=true -config-dir=/etc/consul.d
-
-
+    
+Para consultar los miembros del ambiente de descubrimiento de servicio
+$ consul members
 
 
 4. Adicione un microservicio igual al ya desplegado. Muestre a través de evidencias como las peticiones realizadas al balanceador son dirigidas a la replica del microservicio (30%)
