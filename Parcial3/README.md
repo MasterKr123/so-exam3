@@ -40,16 +40,31 @@ Para esto, cree un usuario microservices:
 
 Luego de esto, descargue **virtualenv** para crear un ambiente virtual, ya que es por medio de los ambientes virtuales de python que es posible ejecutar múltiples proyectos con versiones de librerías distintas. Virtualenvwrapper es un wrapper para virtualenv el cual permite la activación de ambientes virtuales desde cualquier lugar del path del sistema operativo. 
 
-Los comandos que fueron ejecutados (en modo root) fueron:
+Los comandos que fueron ejecutados (en modo root) fueron:  
+# yum install -y wget  
+# wget https://bootstrap.pypa.io/get-pip.py -P /tmp  
+# python /tmp/get-pip.py  
+# pip install virtualenv  
 
-# yum install -y wget
-# wget https://bootstrap.pypa.io/get-pip.py -P /tmp
-# python /tmp/get-pip.py
-# pip install virtualenv
-
-Y en microservices:
-
+Y en microservices:  
 # pip install --user virtualenvwrapper
+
+Para iniciar virtualenvwrapper al autenticarse como el usuario microservices se edita el archivo **.bashrc** de la siguiente manera:  
+
+$ vi ~/.bashrc
+export WORKON_HOME=~/.virtualenvs
+source /home/microservices/.local/bin/virtualenvwrapper.sh
+
+Donde para activar los cambios sin necesidad de cerrar la sesión del usuario python_user se debe ejecutar el siguiente comando:
+
+$ source ~/.bashrc
+
+Luego de tener el ambiente virtual, se procede a crear el **microservice microframework**, para ello se instala Flash. Un micro web framework escrito en Python y basado en la especificación WSGI de Werkzeug y el motor de templates Jinja2. Y Tiene licencia BSD.
+Para realizar esto se hizo lo siguiente:
+
+* Crear un entorno el cual se llamara **flask_environment**  
+$ mkvirtualenv flask_environment
+$ workon flask_environment
 
 
 
