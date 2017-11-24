@@ -19,8 +19,9 @@
 ### Descripción
 El tercer parcial del curso sistemas operativos trata sobre la creación de servicios web y el uso de tecnologías para el descubrimiento de servicio
 
-!()[Microservices_Deployment.png]
+![](Microservices_Deployment.png)
 **Figura 1.** Despliegue básico de microservicios
+
 
 ### Actividades
 1. Incluir nombre, código (5%)
@@ -32,8 +33,23 @@ Para la realizacion de este ejercicio se emplearon tres maquinas vituales:
 - Ubuntu Tau: para el load balancer y template rendering.
 - CentOS7: para el flash microservice, discovery service y log colletor.
 
+**En CentOS7:**
 Lo primero que realize es la creacion del microservicio.  
-Para esto, cree un usuario microservice:
+Para esto, cree un usuario microservices:  
+![](addUser.PNG)  
+
+Luego de esto, descargue **virtualenv** para crear un ambiente virtual, ya que es por medio de los ambientes virtuales de python que es posible ejecutar múltiples proyectos con versiones de librerías distintas. Virtualenvwrapper es un wrapper para virtualenv el cual permite la activación de ambientes virtuales desde cualquier lugar del path del sistema operativo. 
+
+Los comandos que fueron ejecutados (en modo root) fueron:
+
+# yum install -y wget
+# wget https://bootstrap.pypa.io/get-pip.py -P /tmp
+# python /tmp/get-pip.py
+# pip install virtualenv
+
+Y en microservices:
+
+# pip install --user virtualenvwrapper
 
 
 
