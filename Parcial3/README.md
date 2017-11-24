@@ -77,9 +77,33 @@ Para, finalmente construir un microservicio:
 y al correrlo con
 $ python hello.py
 
-obtenemos:
+obtenemos que el microservicio esta montado:
 ![](servicioUP.PNG)
 
+
+Despues de terminar con el microservicio, se procedio a realizar el **consult discovery**. Para ello:
+
+Primero, se instalo las dependencias necesarias:
+# yum install -y wget unzip
+# wget https://releases.hashicorp.com/consul/1.0.0/consul_1.0.0_linux_amd64.zip -P /tmp
+# unzip /tmp/consul_1.0.0_linux_amd64.zip -d /tmp
+# mv /tmp/consul /usr/bin
+# mkdir /etc/consul.d
+# mkdir -p /etc/consul/data
+
+Es recomendado ejecutar el egente consul como otro usuario, por lo que se creara el usuario consul:
+
+# adduser consul
+# passwd consul
+# chown -R consul:consul /etc/consul
+# chown -R consul:consul /etc/consul.d
+
+Abrimos los puertos necesarios en el firewall para el agente de consul
+
+# firewall-cmd --zone=public --add-port=8301/tcp --permanent
+# firewall-cmd --zone=public --add-port=8300/tcp --permanent
+# firewall-cmd --zone=public --add-port=8500/tcp --permanent
+# firewall-cmd --reload
 
 
 
