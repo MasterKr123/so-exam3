@@ -66,6 +66,24 @@ Para realizar esto se hizo lo siguiente:
 $ mkvirtualenv flask_environment
 $ workon flask_environment
 
+![](ambienteVirtual.PNG)
+
+E instalar la libreria Flask 
+$ pip install Flask
+
+Para, finalmente construir un microservicio:
+![](microservicio.PNG)
+
+y al correrlo con
+$ python hello.py
+
+obtenemos:
+![](servicioUP.PNG)
+
+
+
+
+
 
 
 4. Adicione un microservicio igual al ya desplegado. Muestre a través de evidencias como las peticiones realizadas al balanceador son dirigidas a la replica del microservicio (30%)
