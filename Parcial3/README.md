@@ -105,14 +105,11 @@ Abrimos los puertos necesarios en el firewall para el agente de consul
 # firewall-cmd --zone=public --add-port=8500/tcp --permanent
 # firewall-cmd --reload
 
-E inicio el agente en modo servidor:
+E inicio el agente en modo cliente:
 # su consul
-$ consul agent -server -bootstrap-expect=1 \
-    -data-dir=/etc/consul/data -node=agent-server -bind=192.168.64.131 \
-    -enable-script-checks=true -config-dir=/etc/consul.d -client 0.0.0.0
-    
-Para consultar los miembros del ambiente de descubrimiento de servicio
-$ consul members
+$ consul agent -data-dir=/etc/consul/data -node=agent-two \
+    -bind=192.168.64.131 -enable-script-checks=true -config-dir=/etc/consul.d
+    ![](consultAgentCliente.PNG)
 
 
 4. Adicione un microservicio igual al ya desplegado. Muestre a través de evidencias como las peticiones realizadas al balanceador son dirigidas a la replica del microservicio (30%)
