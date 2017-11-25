@@ -41,13 +41,13 @@ Para esto, cree un usuario microservices:
 Luego de esto, descargue **virtualenv** para crear un ambiente virtual, ya que es por medio de los ambientes virtuales de python que es posible ejecutar múltiples proyectos con versiones de librerías distintas. Virtualenvwrapper es un wrapper para virtualenv el cual permite la activación de ambientes virtuales desde cualquier lugar del path del sistema operativo. 
 
 Los comandos que fueron ejecutados (en modo root) fueron:  
-# yum install -y wget  
-# wget https://bootstrap.pypa.io/get-pip.py -P /tmp  
-# python /tmp/get-pip.py  
-# pip install virtualenv  
+$ yum install -y wget  
+$ wget https://bootstrap.pypa.io/get-pip.py -P /tmp  
+$ python /tmp/get-pip.py  
+$ pip install virtualenv  
 
 Y en microservices:  
-# pip install --user virtualenvwrapper
+$ pip install --user virtualenvwrapper
 
 Para iniciar virtualenvwrapper al autenticarse como el usuario microservices se edita el archivo **.bashrc** de la siguiente manera:  
 
@@ -84,32 +84,64 @@ obtenemos que el microservicio esta montado:
 Despues de terminar con el microservicio, se procedio a realizar el **consult discovery**. Para ello:
 
 Primero, se instalo las dependencias necesarias:
-# yum install -y wget unzip
-# wget https://releases.hashicorp.com/consul/1.0.0/consul_1.0.0_linux_amd64.zip -P /tmp
-# unzip /tmp/consul_1.0.0_linux_amd64.zip -d /tmp
-# mv /tmp/consul /usr/bin
-# mkdir /etc/consul.d
-# mkdir -p /etc/consul/data
+$ yum install -y wget unzip
+$ wget https://releases.hashicorp.com/consul/1.0.0/consul_1.0.0_linux_amd64.zip -P /tmp
+$ unzip /tmp/consul_1.0.0_linux_amd64.zip -d /tmp
+$ mv /tmp/consul /usr/bin
+$ mkdir /etc/consul.d
+$ mkdir -p /etc/consul/data
 
 Es recomendado ejecutar el egente consul como otro usuario, por lo que se creara el usuario consul:
 
-# adduser consul
-# passwd consul
-# chown -R consul:consul /etc/consul
-# chown -R consul:consul /etc/consul.d
+$ adduser consul
+$ passwd consul
+$ chown -R consul:consul /etc/consul
+$ chown -R consul:consul /etc/consul.d
 
 Abrimos los puertos necesarios en el firewall para el agente de consul
 
-# firewall-cmd --zone=public --add-port=8301/tcp --permanent
-# firewall-cmd --zone=public --add-port=8300/tcp --permanent
-# firewall-cmd --zone=public --add-port=8500/tcp --permanent
-# firewall-cmd --reload
+$ firewall-cmd --zone=public --add-port=8301/tcp --permanent
+$ firewall-cmd --zone=public --add-port=8300/tcp --permanent
+$ firewall-cmd --zone=public --add-port=8500/tcp --permanent
+$ firewall-cmd --reload
 
 E inicio el agente en modo cliente:
-# su consul
+$ su consul
 $ consul agent -data-dir=/etc/consul/data -node=agent-two \
     -bind=192.168.64.131 -enable-script-checks=true -config-dir=/etc/consul.d
     ![](consultAgentCliente.PNG)
+
+
+Ahora se utilizara la maquina de Ubuntu Tau para realizar el balanceador de carga:
+
+Desde el balanceador se puede hacer peticiones a la maquina de descubrimiento al servicio
+![](balanceadorTodescubrimiento.PNG)
+
+Se instalo las dependencias necesarias:
+
+$ yum install -y wget haproxy unzip
+$ wget https://releases.hashicorp.com/consul-template/0.19.4/consul-template_0.19.4_linux_amd64.zip -P /tmp
+$ unzip /tmp/consul-template_0.19.4_linux_amd64.zip -d /tmp
+$ mv /tmp/consul-template /usr/bin
+$ mkdir /etc/consul-template
+
+Abrir los puertos necesarios en el firewall para el balanceador de carga (haproxy)
+
+$ firewall-cmd --zone=public --add-port=5000/tcp --permanent
+$ firewall-cmd --reload
+Configurar las plantillas de consul-template
+
+$ vi /etc/consul-template/haproxy.tpl
+Realice una prueba generando una vez el archivo de configuración a partir de la plantilla de formato tpl
+
+$ consul-template -consul-addr "192.168.64.131:8500" -template "/etc/consul-template/haproxy.tpl:/etc/haproxy/haproxy.cfg" -once
+Verifique que el archivo de configuración ha sido generado correctamente:
+
+$ cat /etc/haproxy.cfg
+Iniciar el agente de consul-template
+
+$ consul-template -consul-addr "192.168.56.102:8500" -template "/etc/consul-template/haproxy.tpl:/etc/haproxy/haproxy.cfg:systemctl restart haproxy"
+
 
 
 4. Adicione un microservicio igual al ya desplegado. Muestre a través de evidencias como las peticiones realizadas al balanceador son dirigidas a la replica del microservicio (30%)
@@ -120,4 +152,4 @@ $ consul agent -data-dir=/etc/consul/data -node=agent-two \
 https://github.com/ICESI/so-microservices-python  
 http://microservices.io/patterns/microservices.html  
 https://github.com/ICESI/so-microservices-python/tree/master/01_virtualenvs
-
+https://github.com/ICESI/so-discovery-service
